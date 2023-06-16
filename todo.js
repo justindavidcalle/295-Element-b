@@ -22,8 +22,7 @@ app.get(`/tasks`, (request, response) =>{
 app.post(`/tasks`, (request, response) =>{
     const newTask = request.body;
     tasklist.push(newTask);
-    const newTaskId = tasklist.lastIndexOf(tasklist)
-    response.status(201).json(tasklist).send(newTaskId);
+    response.status(201).json(tasklist);
 })
 
 app.get(`/tasks/:id`, (request, response) =>{
@@ -48,6 +47,16 @@ app.put(`/tasks/:id`, (request, response) =>{
         response.sendStatus(404)
     }
 })
+
+app.delete("/tasks/:id", (request, response) => {
+    const id = parseInt(request.params.id);
+    if (id >= 0 && id < tasklist.length) {
+      tasklist.splice(id, 1);
+      response.sendStatus(204)
+    } else {
+      response.sendStatus(404);
+    }
+});
 
 app.listen(port, ()=>{
     console.log(`${port} is connected SUCCESFULLY`)
