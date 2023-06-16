@@ -67,15 +67,22 @@ app.delete("/tasks/:id", (request, response) => {
 });
 
 
-const pwd = "m295"
+const password = "m295"
 app.post('/login', (request, response) => {
-  if(request.body.pwd !== pwd || !request.body.email.includes('@')) {
+  if(request.body.password !== password || !request.body.email.includes('@')) {
     return response.status(401).send('Email or password incorrect')
   }
     request.session.email = request.body.email 
     response.status(200)
     response.send('Your logged in')
 
+})
+
+app.get('/verify', (request, response) => {
+    if (!request.session.email) {
+      return response.status(401).send('failed')
+    }
+    response.status(200).send('verified')
 })
 
 app.listen(port, ()=>{
