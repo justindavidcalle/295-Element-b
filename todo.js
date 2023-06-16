@@ -38,7 +38,7 @@ app.get('/tasks', isAuthorized, (request, response) => {
 app.post('/tasks', isAuthorized, (request, response) => {
   const newTask = request.body
   tasklist.push(newTask)
-  response.status(201).json(tasklist)
+  response.status(201).json(newTask)
 })
 
 app.get('/tasks/:id', isAuthorized, (request, response) => {
@@ -67,8 +67,9 @@ app.put('/tasks/:id', isAuthorized, (request, response) => {
 app.delete('/tasks/:id', isAuthorized, (request, response) => {
   const id = parseInt(request.params.id)
   if (id >= 0 && id < tasklist.length) {
+    const oldTask = tasklist[id]
     tasklist.splice(id, 1)
-    response.sendStatus(204)
+    response.status(202).send(oldTask)
   } else {
     response.sendStatus(404)
   }
