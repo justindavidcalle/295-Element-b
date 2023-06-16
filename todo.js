@@ -14,6 +14,13 @@ app.use(session({
   cookie: {}
 }));
 
+const isAuthenticated = (req, res, next) => {
+    if (!req.session.email) {
+      return res.sendStatus(401);
+    }
+    next();
+  };
+
 const tasklist = [
     { 
         id: 0,
@@ -23,27 +30,27 @@ const tasklist = [
     }
 ];
 
-app.get(`/tasks`, (request, response) =>{
+app.get(`/tasks`, isAuthenticated, (request, response) =>{
     response.status(200).json(tasklist)
 })
 
-app.post(`/tasks`, (request, response) =>{
+app.post(`/tasks`, isAuthenticated , (request, response) =>{
     const newTask = request.body;
     tasklist.push(newTask);
     response.status(201).json(tasklist);
 })
 
-app.get(`/tasks/:id`, (request, response) =>{
+app.get(`/tasks/:id`, isAuthenticated, (request, response) =>{
     const id = parseInt(request.params.id)
-    const index = tasklist.find( t => t.id === id)
-    if(index){
-        response.status(200).json(index)
+    const index = tasklist.findIndex( t => t.id === id)
+    if(index != -1){
+        response.status(200).json(tasklist[index])
     } else{
         response.sendStatus(404)
     }
 })
 
-app.put(`/tasks/:id`, (request, response) =>{
+app.put(`/tasks/:id`, isAuthenticated, (request, response) =>{
     const id = request.params.id
     if(tasklist[id]){
     tasklist[id] = {
@@ -56,7 +63,7 @@ app.put(`/tasks/:id`, (request, response) =>{
     }
 })
 
-app.delete("/tasks/:id", (request, response) => {
+app.delete("/tasks/:id", isAuthenticated, (request, response) => {
     const id = parseInt(request.params.id);
     if (id >= 0 && id < tasklist.length) {
       tasklist.splice(id, 1);
@@ -87,8 +94,10 @@ app.get('/verify', (request, response) => {
 
 app.delete('/logout', (request, response) => {
     request.session.destroy()
-    response.status(204)
+    response.sendStatus(204)
 })
+
+
 
 app.listen(port, ()=>{
     console.log(`${port} is connected SUCCESFULLY`)
