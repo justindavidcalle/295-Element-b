@@ -1,10 +1,18 @@
 const express = require(`express`)
+const session = require(`express-session`)
 
 const port = 3000
 const app = express()
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.use(session({
+  secret: "supersecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {}
+}));
 
 const tasklist = [
     { 
@@ -57,6 +65,18 @@ app.delete("/tasks/:id", (request, response) => {
       response.sendStatus(404);
     }
 });
+
+
+const pwd = "m295"
+app.post('/login', (request, response) => {
+  if(request.body.pwd !== pwd || !request.body.email.includes('@')) {
+    return response.status(401).send('Email or password incorrect')
+  }
+    request.session.email = request.body.email 
+    response.status(200)
+    response.send('Your logged in')
+
+})
 
 app.listen(port, ()=>{
     console.log(`${port} is connected SUCCESFULLY`)
