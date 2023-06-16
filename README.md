@@ -25,6 +25,9 @@ npm install express express-session
 ```sh
 npm start
 ```
+## Struktur
+
+Wurde mit konfiguration von Eslint realisiert
 
 ## Endpunkte
 Für mein Projekt habe ich folgende Endpunkte programmiert:
