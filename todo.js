@@ -31,6 +31,7 @@ const tasklist = [
 ]
 
 app.get('/tasks', isAuthorized, (request, response) => {
+  response.setHeader('Content-Type', 'application/json')
   response.status(200).json(tasklist)
 })
 
@@ -85,7 +86,7 @@ app.post('/login', (request, response) => {
 
 app.get('/verify', (request, response) => {
   if (!request.session.email) {
-    return response.status(401).send('failed')
+    return response.status(401).send('not loged in')
   }
   response.status(200).send('verified')
 })
