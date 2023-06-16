@@ -26,6 +26,16 @@ app.post(`/tasks`, (request, response) =>{
     response.status(201).json(tasklist).send(newTaskId);
 })
 
+app.get(`/tasks/:id`, (request, response) =>{
+    const id = parseInt(request.params.id)
+    const index = tasklist.find( t => t.id === id)
+    if(index){
+        response.status(200).json(index)
+    } else{
+        response.sendStatus(404)
+    }
+})
+
 app.listen(port, ()=>{
     console.log(`${port} is connected SUCCESFULLY`)
 })
