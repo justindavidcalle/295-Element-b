@@ -85,6 +85,11 @@ app.get('/verify', (request, response) => {
     response.status(200).send('verified')
 })
 
+app.delete('/logout', (request, response) => {
+    request.session.destroy()
+    response.status(204)
+})
+
 app.listen(port, ()=>{
     console.log(`${port} is connected SUCCESFULLY`)
 })
